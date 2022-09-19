@@ -1,2 +1,2 @@
-# STIN: Statistical Tests for Interdependence of Neighbors
+# STINE: Statistical Tests for Interdependence of Neighbors' Effects
 
