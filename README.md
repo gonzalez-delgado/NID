@@ -1,6 +1,6 @@
 # STINE: Statistical Testing of the Interdependence of Neighbors' Effects
 
-STINE proposes a statistical methodology to test whether the influences of left and right neighbors' identities on backbone dihedral angles of a given amino acid are independent. In other words, to assess if left and right neighbors can be separately taken into account when estimating the central residue's (phi, psi) distribution or, on the contrary, if the identity of both residues have to be simultaneously considered, meaning that there exists a significant neighbors combined effect.
+STINE proposes a statistical methodology to test whether the influences of left and right neighbors' identities on backbone dihedral angles of a given amino acid are independent. In other words, STINE assesses if left and right neighbors can be separately taken into account when estimating the central residue's (phi, psi) distribution or, on the contrary, if the identity of both residues have to be simultaneously considered, meaning that there exists a significant neighbors combined effect.
 
 The methodology is based on a statistical test assessing the null hypothesis "both neighbors' influences are independent". Small (close to zero) p-values are retrieved if the given samples are very unlikely to be drawn if the null hypothesis is true. This would suggest that both influences are interdependent and therefore that null hypothesis may be rejected with statistical guarantees. 
 
