@@ -1,2 +1,2 @@
-# NID: Neighbors' InterDependence
-Statistical test to prove how tripeptides' left and right neighbors' influences on backbone dihedral angles are interdependent.
+# STIN: Statistical Tests for Interdependence of Neighbors
+
