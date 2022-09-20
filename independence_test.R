@@ -177,35 +177,34 @@ independence_test <- function(central_name, N_bin, N_n = NULL, ball = FALSE, N_r
   pgrid$p_value_bonf <- pmin(N_test*pgrid$p_value, 1) # Bonferroni single-step adjusted p-values
   pgrid$p_value_sidak <- 1 - (1 - pgrid$p_value)^N_test # Sidak single-step adjusted p-values
   
-  library(ggplot2)
-  
+   
   # Plotting S^1\times S^1 space with square grid discretization
-  plot_1 <- ggplot(data = data_central, aes(x = Phi_res_2, y = Psi_res_2, col = out, group = out))+
-    geom_point(size = 0.005)+
-    xlab('Phi')+
-    ylab('Psi')+
-    ggtitle(central_name)+
-    theme(legend.position = 'none')
+  plot_1 <- ggplot2::ggplot(data = data_central, aes(x = Phi_res_2, y = Psi_res_2, col = out, group = out))+
+    ggplot2::geom_point(size = 0.005)+
+    ggplot2::xlab('Phi')+
+    ggplot2::ylab('Psi')+
+    ggplot2::ggtitle(central_name)+
+    ggplot2::theme(legend.position = 'none')
   
   # Plotting S^1\times S^1 space with torus ball discretization
-  plot_2 <- ggplot(data = data_central, aes(x = Phi_res_2, y = Psi_res_2, col = as.factor(torus_dist)))+
-    geom_point(size = 0.005)+
-    xlab('Phi')+
-    ylab('Psi')+
-    xlim(-pi,pi)+
-    ylim(-pi,pi)+
-    #ggtitle(central_name)+
-    theme(legend.position = 'none')
+  plot_2 <- ggplot2::ggplot(data = data_central, aes(x = Phi_res_2, y = Psi_res_2, col = as.factor(torus_dist)))+
+    ggplot2::geom_point(size = 0.005)+
+    ggplot2::xlab('Phi')+
+    ggplot2::ylab('Psi')+
+    ggplot2::xlim(-pi,pi)+
+    ggplot2::ylim(-pi,pi)+
+    #ggplot2::ggtitle(central_name)+
+    ggplot2::theme(legend.position = 'none')
   
   if(plot == TRUE & ball == FALSE){
     print(plot_1+
-            geom_vline(size = 0.2, colour = 'darkblue', linetype = 'dashed', xintercept = phi_grid)+
-            geom_hline(size = 0.2, colour = 'darkblue', linetype = 'dashed', yintercept = psi_grid))}
+            ggplot2::geom_vline(size = 0.2, colour = 'darkblue', linetype = 'dashed', xintercept = phi_grid)+
+            ggplot2::geom_hline(size = 0.2, colour = 'darkblue', linetype = 'dashed', yintercept = psi_grid))}
   
   if(plot == TRUE & ball == TRUE & is.null(N_rep) == TRUE){
     print(plot_2+
-            geom_vline(size = 0.2, colour = 'darkblue', linetype = 'dashed', xintercept = phi_grid)+
-            geom_hline(size = 0.2, colour = 'darkblue', linetype = 'dashed', yintercept = psi_grid))}
+            ggplot2::geom_vline(size = 0.2, colour = 'darkblue', linetype = 'dashed', xintercept = phi_grid)+
+            ggplot2::geom_hline(size = 0.2, colour = 'darkblue', linetype = 'dashed', yintercept = psi_grid))}
   
   if(plot == TRUE & ball == TRUE & is.null(N_rep) == FALSE){print(plot_2)}
   
