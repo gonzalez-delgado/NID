@@ -40,12 +40,13 @@ independence_test <- function(central_name, N_bin, N_n = NULL, ball = FALSE, N_r
                               aa_list, aa_list_left = NULL, aa_list_right = NULL,
                               set_path = data_path_all, plot = TRUE, sim_pvalue = FALSE, only_trans = TRUE){
   
+  
+  
   if(is.null(aa_list_left)){aa_list_left <- aa_list}
   if(is.null(aa_list_right)){aa_list_right <- aa_list}
   
   # Import central amino-acid data
-  setwd(set_path)
-  data_central <- get(load(paste(c(central_name,'angles.RData'),collapse='_')))
+  data_central <- get(load(file.path(set_path, paste(c(central_name,'angles.RData'),collapse='_'))))
   
   # Remove tripeptides with PRO and GLY as left or right neighbors
   data_central <- data_central[-which(data_central$Res1 == 'PRO' | data_central$Res3 == 'PRO' | data_central$Res1 == 'GLY' | data_central$Res3 == 'GLY'), ]
@@ -120,16 +121,16 @@ independence_test <- function(central_name, N_bin, N_n = NULL, ball = FALSE, N_r
     colnames(left_right_list) <- c('left','right')
     left_right_list$left <- as.character(left_right_list$left); left_right_list$right <- as.character(left_right_list$right)
     left_right_list$N_trip <- NA # Number of points with the corresponding L and R
-      
+    
     # Filling N_trip variable in left_right_list
     for(k in 1:nrow(left_right_list)){
       left_right_list$N_trip[k] <- nrow(data_bin[which(data_bin$Res1 == left_right_list$left[k] & data_bin$Res3 == left_right_list$right[k]), ])
     }
-      
+    
     # Transforming left_right_list into a (contingency) matrix
     cont_mat <- matrix(data = left_right_list$N_trip,nrow = length(aa_list_left), ncol = length(aa_list_right), byrow = FALSE)
     colnames(cont_mat) <- aa_list_right; rownames(cont_mat) <- aa_list_left
-      
+    
     #Removing empty rows/columns
     if(sum(cont_mat) == 0){
       
@@ -161,14 +162,14 @@ independence_test <- function(central_name, N_bin, N_n = NULL, ball = FALSE, N_r
         }
         
         if(nrow(cont_mat)*ncol(cont_mat) == 0 | nxt == TRUE){next}else{
-            
-            test <- chisq.test(cont_mat, simulate.p.value = sim_pvalue) # Performs chi-square independence test
-            # Test is performed using the asymptotic distribution of the Pearson's chi-square statistic
-            
-            pgrid$p_value[i] <- test$p.value  #test p-value
-            pgrid$D[i] <- test$statistic #test statistic value
-            pgrid$mat_dim[i] <- min(dim(cont_mat)) #Contingency matrix dimension
-            pgrid$mat_size[i] <- sum(cont_mat) #Contingency matrix number of points
+          
+          test <- chisq.test(cont_mat, simulate.p.value = sim_pvalue) # Performs chi-square independence test
+          # Test is performed using the asymptotic distribution of the Pearson's chi-square statistic
+          
+          pgrid$p_value[i] <- test$p.value  #test p-value
+          pgrid$D[i] <- test$statistic #test statistic value
+          pgrid$mat_dim[i] <- min(dim(cont_mat)) #Contingency matrix dimension
+          pgrid$mat_size[i] <- sum(cont_mat) #Contingency matrix number of points
         }}
   }
   
@@ -176,15 +177,14 @@ independence_test <- function(central_name, N_bin, N_n = NULL, ball = FALSE, N_r
   N_test <- nrow(pgrid)*length(aa_list) # All the test (for each central amino-acid) must be performed using the same discretization parameters
   pgrid$p_value_bonf <- p.adjust(pgrid$p_value, method = 'bonferroni') # Bonferroni adjusted p-values
   pgrid$p_value_holm <- p.adjust(pgrid$p_value, method = 'holm') # Holm adjusted p-values
-   
-
+  
   # Plotting S^1\times S^1 space with square grid discretization
   plot_1 <- ggplot2::ggplot(data = data_central, aes(x = Phi_res_2, y = Psi_res_2, col = out, group = out))+
-    ggplot2::geom_point(size = 0.005)+
-    ggplot2::xlab('Phi')+
-    ggplot2::ylab('Psi')+
-    ggplot2::ggtitle(central_name)+
-    ggplot2::theme(legend.position = 'none')
+      ggplot2::geom_point(size = 0.005)+
+      ggplot2::xlab('Phi')+
+      ggplot2::ylab('Psi')+
+      ggplot2::ggtitle(central_name)+
+      ggplot2::theme(legend.position = 'none')
   
   # Plotting S^1\times S^1 space with torus ball discretization
   plot_2 <- ggplot2::ggplot(data = data_central, aes(x = Phi_res_2, y = Psi_res_2, col = as.factor(torus_dist)))+
@@ -196,17 +196,17 @@ independence_test <- function(central_name, N_bin, N_n = NULL, ball = FALSE, N_r
     #ggplot2::ggtitle(central_name)+
     ggplot2::theme(legend.position = 'none')
   
-  if(plot == TRUE & ball == FALSE){
+  if(plot & !ball){
     print(plot_1+
             ggplot2::geom_vline(size = 0.2, colour = 'darkblue', linetype = 'dashed', xintercept = phi_grid)+
             ggplot2::geom_hline(size = 0.2, colour = 'darkblue', linetype = 'dashed', yintercept = psi_grid))}
   
-  if(plot == TRUE & ball == TRUE & is.null(N_rep) == TRUE){
+  if(plot & ball & is.null(N_rep)){
     print(plot_2+
             ggplot2::geom_vline(size = 0.2, colour = 'darkblue', linetype = 'dashed', xintercept = phi_grid)+
             ggplot2::geom_hline(size = 0.2, colour = 'darkblue', linetype = 'dashed', yintercept = psi_grid))}
   
-  if(plot == TRUE & ball == TRUE & is.null(N_rep) == FALSE){print(plot_2)}
+  if(plot & ball & !is.null(N_rep)){print(plot_2)}
   
   #If no number-of-points restrictions are imposed, the number of empty regions after discretizing:
   #cat('\n',n_empty,'empty divisions out of',N_bin^2,'\n')
@@ -214,5 +214,3 @@ independence_test <- function(central_name, N_bin, N_n = NULL, ball = FALSE, N_r
   return(pgrid)
   
 }
-
-
