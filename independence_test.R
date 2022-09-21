@@ -167,17 +167,17 @@ independence_test <- function(central_name, N_bin, N_n = NULL, ball = FALSE, N_r
             
             pgrid$p_value[i] <- test$p.value  #test p-value
             pgrid$D[i] <- test$statistic #test statistic value
-            pgrid$mat_dim[i] <- dim(cont_mat) #Contingency matrix dimension
+            pgrid$mat_dim[i] <- min(dim(cont_mat)) #Contingency matrix dimension
             pgrid$mat_size[i] <- sum(cont_mat) #Contingency matrix number of points
         }}
   }
   
   # Multiple-test corrections
   N_test <- nrow(pgrid)*length(aa_list) # All the test (for each central amino-acid) must be performed using the same discretization parameters
-  pgrid$p_value_bonf <- pmin(N_test*pgrid$p_value, 1) # Bonferroni single-step adjusted p-values
-  pgrid$p_value_sidak <- 1 - (1 - pgrid$p_value)^N_test # Sidak single-step adjusted p-values
-  
+  pgrid$p_value_bonf <- p.adjust(pgrid$p_value, method = 'bonferroni') # Bonferroni adjusted p-values
+  pgrid$p_value_holm <- p.adjust(pgrid$p_value, method = 'holm') # Holm adjusted p-values
    
+
   # Plotting S^1\times S^1 space with square grid discretization
   plot_1 <- ggplot2::ggplot(data = data_central, aes(x = Phi_res_2, y = Psi_res_2, col = out, group = out))+
     ggplot2::geom_point(size = 0.005)+
