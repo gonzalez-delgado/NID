@@ -1,4 +1,5 @@
-
+source("independence_test.R")
+library(ggplot2)
 
 # Path where the data for each central amino-acid is located
 data_path <- getwd() 
@@ -45,20 +46,19 @@ nonpolar_polar_test <- try(independence_test('ALA', aa_list = amino_acid_list, a
 
 # AUC computation
 
-polar <- polar_polar_test[which(polar_polar_test$mat_dim == 6), ]
-non_polar <- nonpolar_nonpolar_test[which(nonpolar_nonpolar_test$mat_dim == 6), ]
-polar_nonpolar <- polar_nonpolar_test[which(polar_nonpolar_test$mat_dim == 6), ]
-nonpolar_polar <- nonpolar_polar_test[which(nonpolar_polar_test$mat_dim == 6), ]
+auc_from_test <- function(data){
   
-f_polar <- ecdf(polar$p_value)
-f_nonpolar <- ecdf(non_polar$p_value)
-f_polar_nonpolar <- ecdf(polar_nonpolar$p_value)
-f_nonpolar_polar <- ecdf(nonpolar_polar$p_value)
+  data <- data[which(data$mat_dim == 6), ]
+  f <- ecdf(data$p_value)
+  auc <- integrate(f, 0, 1, subdivisions = 10^3)$value
+  return(auc)
   
-auc_polar <- integrate(f_polar, 0, 1, subdivisions = 10^3)$value
-auc_nonpolar <- integrate(f_nonpolar, 0, 1, subdivisions = 10^3)$value
-auc_polar_nonpolar <- integrate(f_polar_nonpolar, 0, 1, subdivisions = 10^3)$value
-auc_nonpolar_polar <- integrate(f_nonpolar_polar, 0, 1, subdivisions = 10^3)$value
+}
+
+auc_polar <- auc_from_test(polar_polar_test)
+auc_nonpolar <- auc_from_test(nonpolar_nonpolar_test)
+auc_polar_nonpolar <- auc_from_test(polar_nonpolar_test)
+auc_nonpolar_polar <- auc_from_test(nonpolar_polar_test)
 
 # Show results
 cat(paste('AUC (P-P): ',auc_polar, '\nAUC (H-H): ',auc_nonpolar,'\nAUC (P-H): ',auc_polar_nonpolar,'\nAUC (H-P): ',auc_nonpolar_polar))
