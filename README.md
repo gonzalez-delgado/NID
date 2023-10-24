@@ -8,6 +8,6 @@ The function ``independence_test`` -included in the [independence_test.R](indepe
 
 Details on the method and results are provided in:
 
-J. González-Delgado, Pau Bernadó, Pierre Neuvial, Juan Cortés. Statistical proofs of the interdependence between nearest neighbor effects on polypeptide backbone conformations. Submitted
+J. González-Delgado, Pau Bernadó, Pierre Neuvial, Juan Cortés. Statistical proofs of the interdependence between nearest neighbor effects on polypeptide backbone conformations. <i>Journal of Structural Biology</i>, 214(4): 107907, 2022. [https://doi.org/10.1016/j.jsb.2022.107907](url).
 
 The database used in the work is available at [https://moma.laas.fr/static/data/tripeptide_angles_data.tar](https://moma.laas.fr/static/data/tripeptide_angles_data.tar).
